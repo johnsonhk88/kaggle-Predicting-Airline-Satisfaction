@@ -34,17 +34,28 @@ Each notebook prints `val_roc_auc`, `val_brier`, `val_log_loss`, and `sec_per_ro
 
 ## Run on Kaggle
 
-1. Create a notebook from `notebooks/laya.ipynb` or `notebooks/kev-0.8b.ipynb`.
-2. Turn Internet on.
-3. Set the accelerator to GPU T4 x2. Each notebook uses one T4.
-4. Attach the competition data.
-5. Run every cell except the last one.
+The Kaggle notebooks are separate from the local ones in `notebooks/`. Do not upload the local notebooks.
+
+1. Edit `id` in `kaggle/laya/kernel-metadata.json` or `kaggle/kev-0.8b/kernel-metadata.json`. Replace `YOUR_KAGGLE_USERNAME` with your Kaggle username.
+2. Accept the competition rules, then push:
+
+```bash
+kaggle kernels push -p kaggle/laya
+kaggle kernels push -p kaggle/kev-0.8b
+```
+
+Or upload `kaggle/laya/laya.ipynb` or `kaggle/kev-0.8b/kev-0.8b.ipynb` in the Kaggle UI. Turn Internet on, set the accelerator to GPU T4 x2, and attach the competition data. Each notebook uses one T4.
+
+3. Run every cell.
+4. Download `submission_laya.csv` or `submission_kev.csv` and the matching `mlflow_run_summary_*.json` from `/kaggle/working`.
 
 Do not install Kev with `pip install kev`. That name is a different package. The Kev notebook installs it from GitHub.
 
 Kev training turns off none-of-the-above augmentation so the two answer options stay intact. Serving turns off fused kernels and CUDA graphs because those paths target newer GPUs. If bf16 fails, the notebook retries in fp32.
 
 Laya trains in the notebook on one T4. The second T4 is unused because dual-GPU training would require a separate Python file.
+
+Checkpoints are written to `/tmp` and are not saved with the Kaggle version. Download the submission before the session ends.
 
 ## Compare and submit
 
